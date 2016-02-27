@@ -35,7 +35,7 @@ io.on('connection', function (socket) {
     });
     
     
-    // emit method takes 2 args: even name and data to send
+    // emit method takes 2 args: event name and data to send
     socket.emit('message', {
         text: 'Welcome to the chat application'
     });
