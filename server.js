@@ -29,8 +29,8 @@ io.on('connection', function (socket) {
         
         // to broadcast options:
         //   io.emit = sends message to everyone including the sender
-        //   broadcast.emit = sends it to everone EXCEPT the sender
-        socket.broadcast.emit('message', message);
+        //   socket.broadcast.emit = sends it to everone EXCEPT the sender
+        io.emit('message', message);
         
     });
     
