@@ -10,10 +10,17 @@ socket.on('connect', function () {
 // frontend listens for an event called message, and when it gets that event
 // it prints it to the screen
 socket.on('message', function (message) {
+    // store formatted timestamp from server's message.timestamp
+    // first convert to utc time, then local, then format
+    var when = moment.utc(message.timestamp).local().format('h:mm a');
+    
     console.log('New message: ');
     console.log(message.text);
     
-    jQuery('.messages').append('<p>' + message.text + '</p>');
+    // mod string to + formatted timestamp
+    // moment.format()
+    jQuery('.messages').append('<p><strong>' + when + ':</strong> '
+                               + message.text + '</p>');
 });
 
 // Handles submitting of new message

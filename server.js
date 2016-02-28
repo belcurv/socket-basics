@@ -2,7 +2,8 @@
 
 var port    = process.env.PORT || 3000,
     express = require('express'),
-    app     = express();
+    app     = express(),
+    moment  = require('moment');
 
 // creating a server using Node instead of express
 // Tells Node to create a new server and use our Express app as the boilerplate.
@@ -21,23 +22,30 @@ app.use(express.static(__dirname + '/public'));
 // We get access to individual connected sockets.
 io.on('connection', function (socket) {
     console.log('User connected via socket.io');
-    
+
     // allow 2 browsers to talk to each ohter
     // emit every message that comes in
     socket.on('message', function (message) {
         console.log('Message received: ' + message.text);
         
-        // to broadcast options:
+        // add javascript timestamp property to message object
+        message.timestamp = moment().valueOf();
+        
+        // two broadcast options:
         //   io.emit = sends message to everyone including the sender
         //   socket.broadcast.emit = sends it to everone EXCEPT the sender
-        io.emit('message', message);
+        io.emit('message', {
+            text: message.text,
+            timestamp: message.timestamp
+        });
         
     });
     
-    
+    // emit initial system message.
     // emit method takes 2 args: event name and data to send
     socket.emit('message', {
-        text: 'Welcome to the chat application'
+        text: 'Welcome to the chat application',
+        timestamp: moment().valueOf()  // add js timestamp to system emit
     });
 });
 
