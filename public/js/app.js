@@ -5,14 +5,15 @@ var name = getQueryVariable('name') || 'Anonymous',
 
 // io is a function within the socket.io library
 var socket = io();
+// browser console messages
+console.log('Connected to Socket.io server!');
+console.log(name + ' joined the ' + room + ' room!');
+
+jQuery('.room-name').text(room);    // set content of <h2> Room Name
+jQuery('.user-name').text(name);    // set content of <input> label
+
 
 socket.on('connect', function () {
-    console.log('Connected to Socket.io server!');
-    console.log(name + ' joined the ' + room + ' room!');
-    
-    // set content of <h2> Room Name
-    jQuery('.room-name').text(room);
-    
     // emit custom event to server asking to join specific room
     socket.emit('joinRoom', {
         name: name,
