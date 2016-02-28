@@ -9,6 +9,16 @@ var socket = io();
 socket.on('connect', function () {
     console.log('Connected to Socket.io server!');
     console.log(name + ' joined the ' + room + ' room!');
+    
+    // set content of <h2> Room Name
+    jQuery('.room-name').text(room);
+    
+    // emit custom event to server asking to join specific room
+    socket.emit('joinRoom', {
+        name: name,
+        room: room
+    });
+
 });
 
 // frontend listens for an event called message, and when it gets that event

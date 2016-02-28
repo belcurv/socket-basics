@@ -17,11 +17,33 @@ var io      = require('socket.io')(http);
 
 app.use(express.static(__dirname + '/public'));
 
+// need to keep track of users and rooms so we know where to route their messages
+var clientInfo = {};   // key = unique socket id, value = the user details
+
 // on method lets us listen for events.  Takes 2 arguments, the event we're
 // listening for and a callback when it happens.
 // We get access to individual connected sockets.
 io.on('connection', function (socket) {
     console.log('User connected via socket.io');
+    
+    // handle users requesting to join a room
+    socket.on('joinRoom', function (req) {     // joinRoom object from app.js
+        
+        // socket.id is where Socket.io stores the UID.
+        clientInfo[socket.id] = req;   // set UID = to the request object
+        
+        // .join is a built-in method tells socket to join a specific room
+        socket.join(req.room);  
+        
+        // tell the users in the room that a new person joined.
+        // .to method lets us spec which room to send the message to.
+        // Then emit the event
+        socket.broadcast.to(req.room).emit('message', {
+            name: 'System',
+            text: req.name + ' has joined.',
+            timestamp: moment().valueOf()
+        });
+    });
 
     // allow 2 browsers to talk to each ohter
     // emit every message that comes in
@@ -32,9 +54,10 @@ io.on('connection', function (socket) {
         message.timestamp = moment().valueOf();
         
         // two broadcast options:
-        //   io.emit = sends message to everyone including the sender
-        //   socket.broadcast.emit = sends it to everone EXCEPT the sender
-        io.emit('message', message );
+        //   io.emit = sends message to everyone including the sender.
+        //   socket.broadcast.emit = sends it to everone EXCEPT the sender.
+        // the .to method + clientInfo, etc routes messages to correct rooms.
+        io.to(clientInfo[socket.id].room).emit('message', message );
         
     });
     
