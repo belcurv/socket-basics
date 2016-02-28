@@ -22,7 +22,7 @@ socket.on('message', function (message) {
     console.log('New message: ');
     console.log(message.text);
     
-    $message.append('<p><strong>' + message.name + ' (' + when + ')</strong>: '
+    $message.append('<p><strong>(' + when +') ' + message.name + '</strong>: '
         + message.text + '</p>');
     
 });

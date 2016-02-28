@@ -4,22 +4,16 @@
     <head>
         <meta charset="utf-8">
         <title>Socket.io Basics</title>
+
     </head>
     <body>
-        <div class="messages">
-            <!-- display received messages here -->
-            
-        </div>
+        <h2>Join Chat</h2>
         
-        <form id="message-form">
-            <input type="text" name="message" />
-            <input type="submit" />
+        <form action="/chat.html">
+            <label>Display Name</label>
+            <input type="text" name="name" />
+            <input type="submit" value="Join Chat"/>
         </form>
-        
-        <script src="/js/jquery-2.2.1.min.js"></script>
-        <script src="/js/socket.io-1.3.7.js" ></script>
-        <script src="/js/moment.js"          ></script>
-        <script src="/js/QueryParams.js"     ></script>
-        <script src="/js/app.js"             ></script>
+ 
     </body>
 </html>
