@@ -34,16 +34,14 @@ io.on('connection', function (socket) {
         // two broadcast options:
         //   io.emit = sends message to everyone including the sender
         //   socket.broadcast.emit = sends it to everone EXCEPT the sender
-        io.emit('message', {
-            text: message.text,
-            timestamp: message.timestamp
-        });
+        io.emit('message', message );
         
     });
     
     // emit initial system message.
     // emit method takes 2 args: event name and data to send
     socket.emit('message', {
+        name: 'System',
         text: 'Welcome to the chat application',
         timestamp: moment().valueOf()  // add js timestamp to system emit
     });

@@ -1,10 +1,14 @@
 /* js/app.js */
 
+var name = getQueryVariable('name') || 'Anonymous',
+    room = getQueryVariable('room');
+
 // io is a function within the socket.io library
 var socket = io();
 
 socket.on('connect', function () {
     console.log('Connected to Socket.io server!');
+    console.log(name + ' joined the ' + room + ' room!');
 });
 
 // frontend listens for an event called message, and when it gets that event
@@ -12,15 +16,15 @@ socket.on('connect', function () {
 socket.on('message', function (message) {
     // store formatted timestamp from server's message.timestamp
     // first convert to utc time, then local, then format
-    var when = moment.utc(message.timestamp).local().format('h:mm a');
+    var when = moment.utc(message.timestamp).local().format('h:mm a'),
+        $message = jQuery('.messages');
     
     console.log('New message: ');
     console.log(message.text);
     
-    // mod string to + formatted timestamp
-    // moment.format()
-    jQuery('.messages').append('<p><strong>' + when + ':</strong> '
-                               + message.text + '</p>');
+    $message.append('<p><strong>' + message.name + ' (' + when + ')</strong>: '
+        + message.text + '</p>');
+    
 });
 
 // Handles submitting of new message
@@ -43,6 +47,7 @@ $form.on('submit', function (event) {
     
     // send the message to the server
     socket.emit('message', {
+        name: name,                // name variable from way up top.
         //set 'text' = to any input tag who's name attribute is 'message'.
         // then method .val pulls value out and returns it as a string.
         text: $message.val()
