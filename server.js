@@ -26,6 +26,33 @@ var clientInfo = {};   // key = unique socket id, value = the user details
 io.on('connection', function (socket) {
     console.log('User connected via socket.io');
     
+    // handle disconnects
+    // Socket.io has a built in disconnect method
+    socket.on('disconnect', function () {
+        // Since Ww use it often, store clientInfo[] in a var.
+        var userData = clientInfo[socket.id];
+        
+        // check if user is actually part of a chat room.
+        // if clientInfo is not undefined, run code.
+        if (typeof userData !== 'undefined') {
+                        
+            // then disconnect user from room
+            // .leave takes the room name, which clientInfo has
+            socket.leave(userData.room);
+            
+            // then emit message to room that user has left room
+            io.to(userData.room).emit('message', {
+                name: 'System',
+                text: userData.name + ' has left the room.',
+                timestamp: moment().valueOf()
+            });
+            
+            // finally, delete user from clientInfo object
+            // 'delete' lets us delete an attribute from an object
+            delete clientInfo[socket.id];
+        }
+    });
+    
     // handle users requesting to join a room
     socket.on('joinRoom', function (req) {     // joinRoom object from app.js
         
