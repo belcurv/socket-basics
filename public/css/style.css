@@ -8,3 +8,11 @@ body, html {
     display: flex;
     align-items: center;
 }
+
+h2 {
+    margin: 24px 0;
+}
+
+.messages p {
+    margin: 6px 0;
+}
