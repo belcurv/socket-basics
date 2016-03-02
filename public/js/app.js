@@ -28,13 +28,15 @@ socket.on('message', function (message) {
     // store formatted timestamp from server's message.timestamp
     // first convert to utc time, then local, then format
     var when = moment.utc(message.timestamp).local().format('h:mm a'),
-        $message = jQuery('.messages');
+        $messages = jQuery('.messages'),
+        $message  = jQuery('<li class="list-group-item"></li>');
     
-    console.log('New message: ');
-    console.log(message.text);
+    
+    console.log('New message: ' + message.text);
     
     $message.append('<p><strong>(' + when +') ' + message.name + '</strong>: '
         + message.text + '</p>');
+    $messages.append($message);
     
 });
 
